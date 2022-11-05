@@ -1,0 +1,72 @@
+#!/bin/bash
+help ()
+{
+    echo "login_web_scraper 0.1"
+    echo "Dependencies:
+    - curl
+
+    Usage:
+    -u:     Enter Username
+    -p:     Enter Password
+    -w:     Enter Target website
+    -t:     Infos to get
+
+
+    Supportet Websites:
+    - Uberspace
+        Infos
+        - guthaben
+        "
+}
+
+# Variables:
+Username="world"
+Password="123654"
+search_for="guthaben"
+
+call_right_function ()
+{
+    if [ "$1" == "uberspace" ]; then
+        uberspace
+    else
+        echo "Error: Invalid Target: $1"
+        exit
+    fi
+}
+
+uberspace () {
+    curl -s -o /dev/null -c /tmp/login_web_scraper 'https://dashboard.uberspace.de/login' \
+        --data-raw "_csrf_token=634F9E33639560772251F5E3E91FBF43&login=$Username&password=$Password&submit=login" \
+        --compressed 
+
+
+    if [ "$search_for" == "guthaben" ]; then
+
+    curl -s -o /tmp/accounting.html --cookie /tmp/login_web_scraper https://dashboard.uberspace.de/dashboard/accounting 
+    pandoc -o /tmp/html-text.txt /tmp/accounting.html
+
+    cat /tmp/html-text.txt | grep "beträgt derzeit" | \
+        awk '{ print $4 }' | sed "s/**//g" | sed "s/ €.//"
+
+    else 
+        echo "Error: Invalid Option: $search_for"
+    fi
+
+
+}
+
+while getopts ":hu:p:w:t:" option; do
+    case $option in
+        h) help
+            exit;;
+        u) # Enter a name
+            Username="$OPTARG";;
+        p) # Enter the Password
+            Password="$OPTARG";;
+        w) call_right_function $OPTARG $Username $Password;;
+        t) search_for="$OPTARG";;
+        \?) # Invalid option
+            echo "Error: Invalid option"
+            exit;;
+    esac
+done
