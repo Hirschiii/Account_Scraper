@@ -27,13 +27,13 @@ account_scraper uberspace konto test/test/test
 
 ### Command structure
 
-uberspace
+`uberspace`
 : the service / module to use
 
-konto
+`konto`
 : The information you want to get.  (For Uberspace: konto=account balance; mon=monthly fee; gb=extra storage)
 
-test/test/test
+`test/test/test`
 : the postition for the username and password in *pass*
 
 ### Pass syntax
