@@ -51,8 +51,12 @@ Change `$username` and `$password` to your needs.
 # Get it into sc-im
 
 ```sc-im
-@ston(@ext("./account_scraper uberspace konto test/test/test",0))
+@ston(@ext("./account_scraper uberspace konto test/test/test #",0))
+
+@ston(@ext("./account_scraper uberspace konto "#A3#"/"#B3#"/"#C3#" #",0))
 ```
+
+The second one get the path to pass directly from the sc-im cells (A3; B3; C3) in the sc-im file.
 
 ## Configuration for sc-im
 
